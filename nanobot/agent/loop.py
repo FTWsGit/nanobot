@@ -397,17 +397,24 @@ class AgentLoop:
             self.sessions.invalidate(session.key)
             return OutboundMessage(channel=msg.channel, chat_id=msg.chat_id,
                                   content="New session started.")
+        if cmd == "/clear":
+            # Directly clear session without consolidation (no memory archival)
+            session.clear()
+            self.sessions.save(session)
+            self.sessions.invalidate(session.key)
+            return OutboundMessage(channel=msg.channel, chat_id=msg.chat_id,
+                                  content="Session cleared. Starting fresh.")
         if cmd == "/help":
-            lines = [
-                "🐈 nanobot commands:",
-                "/new — Start a new conversation",
-                "/stop — Stop the current task",
-                "/restart — Restart the bot",
-                "/help — Show available commands",
+            lines = ["🐈 nanobot commands:",
+                     "/new — Start a new conversation (saves history)",
+                     "/clear — Clear session without saving",
+                     "/stop — Stop the current task",
+                     "/help — Show available commands"
             ]
             return OutboundMessage(
                 channel=msg.channel, chat_id=msg.chat_id, content="\n".join(lines),
             )
+
         await self.memory_consolidator.maybe_consolidate_by_tokens(session)
 
         self._set_tool_context(msg.channel, msg.chat_id, msg.metadata.get("message_id"))

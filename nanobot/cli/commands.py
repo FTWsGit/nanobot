@@ -312,7 +312,7 @@ def _make_provider(config: Config):
     if provider_name == "openai_codex" or model.startswith("openai-codex/"):
         provider = OpenAICodexProvider(default_model=model)
     # Custom: direct OpenAI-compatible endpoint, bypasses LiteLLM
-    elif provider_name == "custom":
+    elif provider_name in ["custom", "qiniuyun"]:
         from nanobot.providers.custom_provider import CustomProvider
         provider = CustomProvider(
             api_key=p.api_key if p else "no-key",
@@ -392,7 +392,12 @@ def _print_deprecated_memory_window_notice(config: Config) -> None:
 
 @app.command()
 def gateway(
+<<<<<<< HEAD
     port: int | None = typer.Option(None, "--port", "-p", help="Gateway port"),
+=======
+    port: int = typer.Option(18790, "--port", "-p", help="Gateway port"),
+    profile: str = typer.Option("defaults", "--profile", "-pf", help="Model profile to use"),
+>>>>>>> d4f0157 (Add some features that suit me)
     workspace: str | None = typer.Option(None, "--workspace", "-w", help="Workspace directory"),
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Verbose output"),
     config: str | None = typer.Option(None, "--config", "-c", help="Path to config file"),
@@ -412,9 +417,16 @@ def gateway(
         logging.basicConfig(level=logging.DEBUG)
 
     config = _load_runtime_config(config, workspace)
+<<<<<<< HEAD
     _print_deprecated_memory_window_notice(config)
     port = port if port is not None else config.gateway.port
 
+=======
+    if profile != "defaults":
+        agent_config = config.agents.profiles[profile]
+        config.agents.defaults = agent_config
+        
+>>>>>>> d4f0157 (Add some features that suit me)
     console.print(f"{__logo__} Starting nanobot gateway on port {port}...")
     sync_workspace_templates(config.workspace_path)
     bus = MessageBus()
@@ -588,6 +600,7 @@ def gateway(
 @app.command()
 def agent(
     message: str = typer.Option(None, "--message", "-m", help="Message to send to the agent"),
+    profile: str = typer.Option("defaults", "--profile", "-p", help="Model profile to use"),
     session_id: str = typer.Option("cli:direct", "--session", "-s", help="Session ID"),
     workspace: str | None = typer.Option(None, "--workspace", "-w", help="Workspace directory"),
     config: str | None = typer.Option(None, "--config", "-c", help="Config file path"),
@@ -603,7 +616,13 @@ def agent(
     from nanobot.cron.service import CronService
 
     config = _load_runtime_config(config, workspace)
+<<<<<<< HEAD
     _print_deprecated_memory_window_notice(config)
+=======
+    if profile != "defaults":
+        agent_config = config.agents.profiles[profile]
+        config.agents.defaults = agent_config
+>>>>>>> d4f0157 (Add some features that suit me)
     sync_workspace_templates(config.workspace_path)
 
     bus = MessageBus()
