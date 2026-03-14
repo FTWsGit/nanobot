@@ -2,11 +2,7 @@ import asyncio
 
 import pytest
 
-<<<<<<< HEAD
 from nanobot.providers.base import GenerationSettings, LLMProvider, LLMResponse
-=======
-from nanobot.providers.base import LLMProvider, LLMResponse
->>>>>>> fae0be1 (Add some files)
 
 
 class ScriptedProvider(LLMProvider):
@@ -14,17 +10,11 @@ class ScriptedProvider(LLMProvider):
         super().__init__()
         self._responses = list(responses)
         self.calls = 0
-<<<<<<< HEAD
         self.last_kwargs: dict = {}
 
     async def chat(self, *args, **kwargs) -> LLMResponse:
         self.calls += 1
         self.last_kwargs = kwargs
-=======
-
-    async def chat(self, *args, **kwargs) -> LLMResponse:
-        self.calls += 1
->>>>>>> fae0be1 (Add some files)
         response = self._responses.pop(0)
         if isinstance(response, BaseException):
             raise response
@@ -102,7 +92,6 @@ async def test_chat_with_retry_preserves_cancelled_error() -> None:
 
     with pytest.raises(asyncio.CancelledError):
         await provider.chat_with_retry(messages=[{"role": "user", "content": "hello"}])
-<<<<<<< HEAD
 
 
 @pytest.mark.asyncio
@@ -134,5 +123,3 @@ async def test_chat_with_retry_explicit_override_beats_defaults() -> None:
     assert provider.last_kwargs["temperature"] == 0.9
     assert provider.last_kwargs["max_tokens"] == 9999
     assert provider.last_kwargs["reasoning_effort"] == "low"
-=======
->>>>>>> fae0be1 (Add some files)
