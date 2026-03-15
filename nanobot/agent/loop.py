@@ -405,11 +405,13 @@ class AgentLoop:
             return OutboundMessage(channel=msg.channel, chat_id=msg.chat_id,
                                   content="Session cleared. Starting fresh.")
         if cmd == "/help":
-            lines = ["🐈 nanobot commands:",
-                     "/new — Start a new conversation (saves history)",
-                     "/clear — Clear session without saving",
-                     "/stop — Stop the current task",
-                     "/help — Show available commands"
+            lines = [
+                "🐈 nanobot commands:",
+                "/new — Start a new conversation (saves history)",
+                "/clear — Clear session without saving",
+                "/stop — Stop the current task",
+                "/restart — Restart the bot",
+                "/help — Show available commands"
             ]
             return OutboundMessage(
                 channel=msg.channel, chat_id=msg.chat_id, content="\n".join(lines),
